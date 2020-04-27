@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
+import { useClock } from "./hooks/clock";
 
 const MS_S = 1000;
 const MS_M = MS_S * 60;
@@ -22,14 +23,10 @@ const timeDiff = (from: Date, to: Date): string => {
 
 export default function App() {
   const [pressedTime, setPressedTime] = useState<undefined | Date>(undefined);
-  const [now, setNow] = useState(new Date());
+  const now = useClock();
   const handlePress = () => {
     setPressedTime(new Date());
   };
-  useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
   return (
     <View style={styles.container}>
       <Button title="Press Me" onPress={handlePress} />
