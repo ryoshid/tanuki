@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
+import { usePersistedState } from "./hooks/persistedState";
 import { useClock } from "./hooks/clock";
 
 const MS_S = 1000;
@@ -22,16 +23,20 @@ const timeDiff = (from: Date, to: Date): string => {
 };
 
 export default function App() {
-  const [pressedTime, setPressedTime] = useState<undefined | Date>(undefined);
+  const [pressedTimeMS, setPressedTime] = usePersistedState<undefined | number>(
+    "pressed",
+    undefined
+  );
+  const pressedTime = new Date(pressedTimeMS ?? 0);
   const now = useClock();
   const handlePress = () => {
-    setPressedTime(new Date());
+    setPressedTime(new Date().getTime());
   };
   return (
     <View style={styles.container}>
       <Button title="Press Me" onPress={handlePress} />
-      <Text>{pressedTime ? pressedTime.toString() : "Never Pressed"}</Text>
-      {pressedTime && <Text>Time elapsed: {timeDiff(pressedTime, now)}</Text>}
+      <Text>{pressedTimeMS ? pressedTime.toString() : "Never Pressed"}</Text>
+      {pressedTimeMS && <Text>Time elapsed: {timeDiff(pressedTime, now)}</Text>}
     </View>
   );
 }
