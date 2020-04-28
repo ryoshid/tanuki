@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { usePersistedState } from "./hooks/persistedState";
 import { useClock } from "./hooks/clock";
@@ -22,7 +22,7 @@ const timeDiff = (from: Date, to: Date): string => {
   return formatDuration(diff);
 };
 
-export default function App() {
+const App: React.FC = () => {
   const [pressedTimeMS, setPressedTime] = usePersistedState<undefined | number>(
     "pressed",
     undefined
@@ -39,7 +39,9 @@ export default function App() {
       {pressedTimeMS && <Text>Time elapsed: {timeDiff(pressedTime, now)}</Text>}
     </View>
   );
-}
+};
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
