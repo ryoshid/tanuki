@@ -4,14 +4,21 @@ import { usePersistedState } from "./hooks/persistedState";
 import { useClock } from "./hooks/clock";
 import { timeDiff } from "./util/time";
 
-type EventKind = "Start" | "GoToBed" | "TryToSleep" | "WakeUp" | "GetUp";
+type EventKind =
+  | "Start"
+  | "GoToBed"
+  | "TryToSleep"
+  | "WakeUp"
+  | "GetUp"
+  | "End";
 
-const nextEventName: { [K in EventKind]: [EventKind] } = {
+const nextEventName: Readonly<{ [K in EventKind]: EventKind[] }> = {
   Start: ["GoToBed"],
   GoToBed: ["TryToSleep"],
   TryToSleep: ["WakeUp"],
   WakeUp: ["GetUp"],
-  GetUp: ["GetUp"],
+  GetUp: ["End"],
+  End: ["End"],
 };
 
 type Event = {
@@ -78,13 +85,17 @@ const App: React.FC = () => {
       {events.map((ev, i) => (
         <View key={i}>
           {!ev.pressed
-            ? ev.nextEvents.map((evName, j) => (
-                <Button
-                  key={j}
-                  title={evName}
-                  onPress={() => handleEventPress(evName)}
-                />
-              ))
+            ? ev.nextEvents.map((evName, j) =>
+                evName !== "End" ? (
+                  <Button
+                    key={j}
+                    title={evName}
+                    onPress={() => handleEventPress(evName)}
+                  />
+                ) : (
+                  <Text key={j}>end</Text>
+                )
+              )
             : ev.time_ms.from &&
               ev.time_ms.to && (
                 <Text>
@@ -97,9 +108,16 @@ const App: React.FC = () => {
         </View>
       ))}
       {currentEvent.time_ms.from && (
-        <Text>
-          Time elapsed: {timeDiff(new Date(currentEvent.time_ms.from), now)}
-        </Text>
+        <View>
+          <Text>
+            {`${currentEvent.name}: ${new Date(currentEvent.time_ms.from)}`}
+          </Text>
+          {currentEvent.nextEvents[0] !== "End" && (
+            <Text>
+              Time elapsed: {timeDiff(new Date(currentEvent.time_ms.from), now)}
+            </Text>
+          )}
+        </View>
       )}
       <Button title="log" onPress={() => console.log(events)} />
     </View>
