@@ -100,9 +100,6 @@ const App: React.FC = () => {
           Time elapsed: {timeDiff(new Date(currentEvent.time_ms.from), now)}
         </Text>
       )}
-      <Button title="Press Me" onPress={handlePress} />
-      <Text>{pressedTimeMS ? pressedTime.toString() : "Never Pressed"}</Text>
-      {pressedTimeMS && <Text>Time elapsed: {timeDiff(pressedTime, now)}</Text>}
     </View>
   );
 };
