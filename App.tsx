@@ -37,7 +37,6 @@ const App: React.FC = () => {
   const currentEvent = events[events.length - 1];
   const handleEventPress = (nextEvent: EventKind) => {
     setEvents((prev) => {
-      console.log(prev);
       const lastEvent = prev[prev.length - 1];
       const now_ms = new Date().getTime();
       return prev
@@ -72,7 +71,6 @@ const App: React.FC = () => {
       <Button
         title="Reset"
         onPress={() => {
-          console.log(events);
           setEvents([defaultEvent]);
         }}
       />
@@ -103,6 +101,7 @@ const App: React.FC = () => {
           Time elapsed: {timeDiff(new Date(currentEvent.time_ms.from), now)}
         </Text>
       )}
+      <Button title="log" onPress={() => console.log(events)} />
     </View>
   );
 };
