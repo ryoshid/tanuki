@@ -55,6 +55,18 @@ const App: React.FC = () => {
         });
     });
   };
+  const rewindEvent = () => {
+    setEvents((prev) => {
+      const len = prev.length;
+      if (len < 2) return prev;
+      const rewindedEvent = prev[len - 2];
+      return prev.slice(0, len - 2).concat({
+        ...rewindedEvent,
+        pressed: false,
+        time_ms: { from: rewindedEvent.time_ms.from, to: undefined },
+      });
+    });
+  };
   return (
     <View style={styles.container}>
       <Button
@@ -64,6 +76,7 @@ const App: React.FC = () => {
           setEvents([defaultEvent]);
         }}
       />
+      <Button title="Back" onPress={rewindEvent} />
       {events.map((ev, i) => (
         <View key={i}>
           {!ev.pressed
