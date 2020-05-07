@@ -24,8 +24,6 @@ type Event = {
   nextEvents: EventKind[];
 };
 
-type Events = Event[];
-
 const defaultEvent: Event = {
   name: "Start",
   time_ms: { from: undefined, to: undefined },
@@ -34,17 +32,9 @@ const defaultEvent: Event = {
 };
 
 const App: React.FC = () => {
-  const [pressedTimeMS, setPressedTime] = usePersistedState<undefined | number>(
-    "pressed",
-    undefined
-  );
   const [events, setEvents] = usePersistedState("events", [defaultEvent]);
-  const pressedTime = new Date(pressedTimeMS ?? 0);
   const now = useClock();
   const currentEvent = events[events.length - 1];
-  const handlePress = () => {
-    setPressedTime(new Date().getTime());
-  };
   const handleEventPress = (nextEvent: EventKind) => {
     setEvents((prev) => {
       console.log(prev);
